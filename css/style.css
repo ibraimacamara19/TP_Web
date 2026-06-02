@@ -1,0 +1,284 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f7fb;
+    color: #222;
+}
+
+.topo {
+    background-color: #003366;
+    color: white;
+    padding: 20px;
+}
+
+.logo h1 {
+    font-size: 28px;
+}
+
+.logo p {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.menu {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    background-color: #0059b3;
+    padding: 10px 14px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    background-color: #ffcc00;
+    color: #003366;
+}
+
+.conteudo {
+    padding: 30px;
+}
+
+.hero {
+    background: linear-gradient(135deg, #0059b3, #003366);
+    color: white;
+    padding: 50px 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.hero-texto h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.hero-texto p {
+    font-size: 18px;
+    max-width: 800px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.botao {
+    display: inline-block;
+    background-color: #ffcc00;
+    color: #003366;
+    padding: 12px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    background-color: white;
+    padding: 25px;
+    flex: 1 1 220px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+    color: #003366;
+    margin-bottom: 10px;
+}
+
+.card p {
+    line-height: 1.5;
+}
+
+.rodape {
+    background-color: #003366;
+    color: white;
+    text-align: center;
+    padding: 18px;
+    margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+    .menu {
+        flex-direction: column;
+    }
+
+    .hero-texto h2 {
+        font-size: 24px;
+    }
+
+    .conteudo {
+        padding: 15px;
+    }
+}
+.cabecalho-pagina {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.cabecalho-pagina h2 {
+    color: #003366;
+    margin-bottom: 8px;
+}
+
+.formulario-container,
+.tabela-container {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.formulario-container h3,
+.tabela-container h3 {
+    color: #003366;
+    margin-bottom: 20px;
+}
+
+.formulario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.campo {
+    flex: 1 1 250px;
+    display: flex;
+    flex-direction: column;
+}
+
+.campo-largo {
+    flex: 1 1 100%;
+}
+
+.campo label {
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #003366;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+    padding: 11px;
+    border: 1px solid #ccd6e0;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+    outline: none;
+    border-color: #0059b3;
+}
+
+.botoes-formulario {
+    flex: 1 1 100%;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.botao-secundario {
+    background-color: #6c757d;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.botao,
+.botao-secundario {
+    border: none;
+    cursor: pointer;
+}
+
+.botao:hover {
+    background-color: #e6b800;
+}
+
+.botao-secundario:hover {
+    background-color: #5a6268;
+}
+
+.mensagem-formulario {
+    flex: 1 1 100%;
+    font-weight: bold;
+    color: #007a3d;
+}
+
+.tabela {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela th,
+.tabela td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.tabela th {
+    background-color: #003366;
+    color: white;
+}
+
+.tabela tr:hover {
+    background-color: #f1f6ff;
+}
+
+.acao {
+    padding: 8px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    margin-right: 5px;
+}
+
+.editar {
+    background-color: #007bff;
+}
+
+.eliminar {
+    background-color: #dc3545;
+}
+
+.editar:hover {
+    background-color: #0056b3;
+}
+
+.eliminar:hover {
+    background-color: #b02a37;
+}
+
+@media (max-width: 768px) {
+    .tabela-container {
+        overflow-x: auto;
+    }
+
+    .tabela {
+        min-width: 700px;
+    }
+}
