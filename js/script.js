@@ -40,3 +40,13 @@ if (formularioDisciplina) {
         mensagemDisciplina.textContent = "Validação efetuada com sucesso. A disciplina será guardada quando ligarmos o PHP à base de dados.";
     });
 }
+const formularioNota = document.querySelector(".formulario-nota");
+const mensagemNota = document.getElementById("mensagemNota");
+
+if (formularioNota) {
+    formularioNota.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+
+        mensagemNota.textContent = "Validação efetuada com sucesso. A nota será guardada quando ligarmos o PHP à base de dados.";
+    });
+}
