@@ -30,3 +30,13 @@ if (formularioTurma) {
         mensagemTurma.textContent = "Validação efetuada com sucesso. A turma será guardada quando ligarmos o PHP à base de dados.";
     });
 }
+const formularioDisciplina = document.querySelector(".formulario-disciplina");
+const mensagemDisciplina = document.getElementById("mensagemDisciplina");
+
+if (formularioDisciplina) {
+    formularioDisciplina.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+
+        mensagemDisciplina.textContent = "Validação efetuada com sucesso. A disciplina será guardada quando ligarmos o PHP à base de dados.";
+    });
+}
