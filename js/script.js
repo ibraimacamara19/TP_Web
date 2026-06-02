@@ -50,3 +50,13 @@ if (formularioNota) {
         mensagemNota.textContent = "Validação efetuada com sucesso. A nota será guardada quando ligarmos o PHP à base de dados.";
     });
 }
+const formularioPagamento = document.querySelector(".formulario-pagamento");
+const mensagemPagamento = document.getElementById("mensagemPagamento");
+
+if (formularioPagamento) {
+    formularioPagamento.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+
+        mensagemPagamento.textContent = "Validação efetuada com sucesso. O pagamento será guardado quando ligarmos o PHP à base de dados.";
+    });
+}
