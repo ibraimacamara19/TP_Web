@@ -60,3 +60,13 @@ if (formularioPagamento) {
         mensagemPagamento.textContent = "Validação efetuada com sucesso. O pagamento será guardado quando ligarmos o PHP à base de dados.";
     });
 }
+const formularioRelatorio = document.querySelector(".formulario-relatorio");
+const mensagemRelatorio = document.getElementById("mensagemRelatorio");
+
+if (formularioRelatorio) {
+    formularioRelatorio.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+
+        mensagemRelatorio.textContent = "Relatório gerado com sucesso. Os dados reais serão apresentados quando ligarmos o PHP à base de dados.";
+    });
+}
