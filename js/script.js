@@ -70,3 +70,13 @@ if (formularioRelatorio) {
         mensagemRelatorio.textContent = "Relatório gerado com sucesso. Os dados reais serão apresentados quando ligarmos o PHP à base de dados.";
     });
 }
+const formularioContacto = document.querySelector(".formulario-contacto");
+const mensagemContacto = document.getElementById("mensagemContacto");
+
+if (formularioContacto) {
+    formularioContacto.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+
+        mensagemContacto.textContent = "Mensagem validada com sucesso. O envio por email será ativado quando ligarmos o PHP/PHPMailer.";
+    });
+}

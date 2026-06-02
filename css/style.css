@@ -325,3 +325,40 @@ body {
     background-color: #fff3cd;
     color: #856404;
 }
+.contacto-layout {
+    display: flex;
+    gap: 25px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.contacto-formulario {
+    flex: 2 1 500px;
+}
+
+.info-contacto {
+    flex: 1 1 280px;
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.info-contacto h3 {
+    color: #003366;
+    margin-bottom: 20px;
+}
+
+.info-item {
+    margin-bottom: 18px;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 12px;
+}
+
+.info-item strong {
+    color: #003366;
+}
+
+.info-item p {
+    margin-top: 5px;
+}
