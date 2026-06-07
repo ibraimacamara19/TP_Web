@@ -1,3 +1,72 @@
+<?php
+require_once 'config/conexao.php';
+
+$mensagem = "";
+
+if (isset($_GET["msg"])) {
+    if ($_GET["msg"] === "eliminado") {
+        $mensagem = "Pagamento eliminado com sucesso!";
+    }
+
+    if ($_GET["msg"] === "atualizado") {
+        $mensagem = "Pagamento atualizado com sucesso!";
+    }
+}
+
+if (isset($_GET["acao"]) && $_GET["acao"] === "eliminar" && isset($_GET["id"])) {
+    $id_pagamento = intval($_GET["id"]);
+
+    $sql_delete = "DELETE FROM pagamentos WHERE id_pagamento = ?";
+    $stmt_delete = mysqli_prepare($conn, $sql_delete);
+    mysqli_stmt_bind_param($stmt_delete, "i", $id_pagamento);
+
+    if (mysqli_stmt_execute($stmt_delete)) {
+        header("Location: pagamentos.php?msg=eliminado");
+        exit;
+    } else {
+        $mensagem = "Erro ao eliminar pagamento: " . mysqli_error($conn);
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $aluno = $_POST["aluno_pagamento"];
+    $tipo_pagamento = $_POST["tipo_pagamento"];
+    $mes_referencia = $_POST["mes_referencia"];
+    $valor = $_POST["valor_pagamento"];
+    $data_pagamento = $_POST["data_pagamento"];
+    $metodo_pagamento = $_POST["metodo_pagamento"];
+    $estado = $_POST["estado_pagamento"];
+    $observacao = $_POST["observacao_pagamento"];
+
+    $sql = "INSERT INTO pagamentos 
+        (aluno, tipo_pagamento, mes_referencia, valor, data_pagamento, metodo_pagamento, estado, observacao)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = mysqli_prepare($conn, $sql);
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "sssdssss",
+        $aluno,
+        $tipo_pagamento,
+        $mes_referencia,
+        $valor,
+        $data_pagamento,
+        $metodo_pagamento,
+        $estado,
+        $observacao
+    );
+
+    if (mysqli_stmt_execute($stmt)) {
+        $mensagem = "Pagamento registado com sucesso!";
+    } else {
+        $mensagem = "Erro ao registar pagamento: " . mysqli_error($conn);
+    }
+}
+
+$resultado = mysqli_query($conn, "SELECT * FROM pagamentos ORDER BY id_pagamento DESC");
+?>
+
 <?php include 'includes/header.php'; ?>
 <?php include 'includes/menu.php'; ?>
 
@@ -11,15 +80,20 @@
     <section class="formulario-container">
         <h3>Registar Novo Pagamento</h3>
 
-        <form class="formulario formulario-pagamento" method="post" action="#">
+        <?php if (!empty($mensagem)) { ?>
+            <p class="mensagem-formulario"><?php echo $mensagem; ?></p>
+        <?php } ?>
+
+        <form class="formulario" method="post" action="pagamentos.php">
             <div class="campo">
                 <label for="aluno_pagamento">Aluno</label>
-                <select id="aluno_pagamento" name="aluno_pagamento" required>
-                    <option value="">Selecione o aluno</option>
-                    <option value="1">Maria Gomes</option>
-                    <option value="2">João Embaló</option>
-                    <option value="3">Djamila Camara</option>
-                </select>
+                <input 
+                    type="text" 
+                    id="aluno_pagamento" 
+                    name="aluno_pagamento" 
+                    placeholder="Nome do aluno"
+                    required
+                    maxlength="120">
             </div>
 
             <div class="campo">
@@ -106,8 +180,6 @@
                 <button type="submit" class="botao">Guardar Pagamento</button>
                 <button type="reset" class="botao-secundario">Limpar</button>
             </div>
-
-            <p class="mensagem-formulario" id="mensagemPagamento"></p>
         </form>
     </section>
 
@@ -129,33 +201,29 @@
             </thead>
 
             <tbody>
-                <tr>
-                    <td>Maria Gomes</td>
-                    <td>Propina</td>
-                    <td>Janeiro</td>
-                    <td>15 000 FCFA</td>
-                    <td>2026-01-10</td>
-                    <td>Dinheiro</td>
-                    <td>Pago</td>
-                    <td>
-                        <button class="acao editar">Editar</button>
-                        <button class="acao eliminar">Eliminar</button>
-                    </td>
-                </tr>
+                <?php while ($pagamento = mysqli_fetch_assoc($resultado)) { ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($pagamento["aluno"]); ?></td>
+                        <td><?php echo htmlspecialchars($pagamento["tipo_pagamento"]); ?></td>
+                        <td><?php echo htmlspecialchars($pagamento["mes_referencia"]); ?></td>
+                        <td><?php echo htmlspecialchars($pagamento["valor"]); ?> FCFA</td>
+                        <td><?php echo htmlspecialchars($pagamento["data_pagamento"]); ?></td>
+                        <td><?php echo htmlspecialchars($pagamento["metodo_pagamento"]); ?></td>
+                        <td><?php echo htmlspecialchars($pagamento["estado"]); ?></td>
+                        <td>
+                            <a class="acao editar" href="editar_pagamento.php?id=<?php echo $pagamento['id_pagamento']; ?>">
+                                Editar
+                            </a>
 
-                <tr>
-                    <td>João Embaló</td>
-                    <td>Matrícula</td>
-                    <td>-</td>
-                    <td>25 000 FCFA</td>
-                    <td>2026-01-05</td>
-                    <td>Transferência</td>
-                    <td>Pago</td>
-                    <td>
-                        <button class="acao editar">Editar</button>
-                        <button class="acao eliminar">Eliminar</button>
-                    </td>
-                </tr>
+                            <a 
+                                class="acao eliminar" 
+                                href="pagamentos.php?acao=eliminar&id=<?php echo $pagamento['id_pagamento']; ?>"
+                                onclick="return confirm('Tem a certeza que deseja eliminar este pagamento?');">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                <?php } ?>
             </tbody>
         </table>
     </section>
