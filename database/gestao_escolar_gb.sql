@@ -52,3 +52,14 @@ CREATE TABLE IF NOT EXISTS disciplinas (
     descricao TEXT,
     criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE IF NOT EXISTS notas (
+    id_nota INT AUTO_INCREMENT PRIMARY KEY,
+    aluno VARCHAR(120) NOT NULL,
+    turma VARCHAR(50) NOT NULL,
+    disciplina VARCHAR(100) NOT NULL,
+    professor VARCHAR(120) NOT NULL,
+    periodo ENUM('1_periodo', '2_periodo', '3_periodo', 'final') NOT NULL,
+    nota DECIMAL(5,2) NOT NULL,
+    observacao TEXT,
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
+);

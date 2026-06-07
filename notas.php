@@ -1,3 +1,70 @@
+<?php
+require_once 'config/conexao.php';
+
+$mensagem = "";
+
+if (isset($_GET["msg"])) {
+    if ($_GET["msg"] === "eliminado") {
+        $mensagem = "Nota eliminada com sucesso!";
+    }
+
+    if ($_GET["msg"] === "atualizado") {
+        $mensagem = "Nota atualizada com sucesso!";
+    }
+}
+
+if (isset($_GET["acao"]) && $_GET["acao"] === "eliminar" && isset($_GET["id"])) {
+    $id_nota = intval($_GET["id"]);
+
+    $sql_delete = "DELETE FROM notas WHERE id_nota = ?";
+    $stmt_delete = mysqli_prepare($conn, $sql_delete);
+    mysqli_stmt_bind_param($stmt_delete, "i", $id_nota);
+
+    if (mysqli_stmt_execute($stmt_delete)) {
+        header("Location: notas.php?msg=eliminado");
+        exit;
+    } else {
+        $mensagem = "Erro ao eliminar nota: " . mysqli_error($conn);
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $aluno = $_POST["aluno_nota"];
+    $turma = $_POST["turma_nota"];
+    $disciplina = $_POST["disciplina_nota"];
+    $professor = $_POST["professor_nota"];
+    $periodo = $_POST["periodo"];
+    $nota = $_POST["nota"];
+    $observacao = $_POST["observacao_nota"];
+
+    $sql = "INSERT INTO notas 
+        (aluno, turma, disciplina, professor, periodo, nota, observacao)
+        VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = mysqli_prepare($conn, $sql);
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "sssssss",
+        $aluno,
+        $turma,
+        $disciplina,
+        $professor,
+        $periodo,
+        $nota,
+        $observacao
+    );
+
+    if (mysqli_stmt_execute($stmt)) {
+        $mensagem = "Nota registada com sucesso!";
+    } else {
+        $mensagem = "Erro ao registar nota: " . mysqli_error($conn);
+    }
+}
+
+$resultado = mysqli_query($conn, "SELECT * FROM notas ORDER BY id_nota DESC");
+?>
+
 <?php include 'includes/header.php'; ?>
 <?php include 'includes/menu.php'; ?>
 
@@ -11,46 +78,29 @@
     <section class="formulario-container">
         <h3>Lançar Nova Nota</h3>
 
-        <form class="formulario formulario-nota" method="post" action="#">
+        <?php if (!empty($mensagem)) { ?>
+            <p class="mensagem-formulario"><?php echo $mensagem; ?></p>
+        <?php } ?>
+
+        <form class="formulario" method="post" action="notas.php">
             <div class="campo">
                 <label for="aluno_nota">Aluno</label>
-                <select id="aluno_nota" name="aluno_nota" required>
-                    <option value="">Selecione o aluno</option>
-                    <option value="1">Maria Gomes</option>
-                    <option value="2">João Embaló</option>
-                    <option value="3">Djamila Camara</option>
-                </select>
+                <input type="text" id="aluno_nota" name="aluno_nota" placeholder="Nome do aluno" required maxlength="120">
             </div>
 
             <div class="campo">
                 <label for="turma_nota">Turma</label>
-                <select id="turma_nota" name="turma_nota" required>
-                    <option value="">Selecione a turma</option>
-                    <option value="10A">10.º Ano A</option>
-                    <option value="11A">11.º Ano A</option>
-                    <option value="12A">12.º Ano A</option>
-                </select>
+                <input type="text" id="turma_nota" name="turma_nota" placeholder="Ex: 10.º Ano A" required maxlength="50">
             </div>
 
             <div class="campo">
                 <label for="disciplina_nota">Disciplina</label>
-                <select id="disciplina_nota" name="disciplina_nota" required>
-                    <option value="">Selecione a disciplina</option>
-                    <option value="matematica">Matemática</option>
-                    <option value="portugues">Português</option>
-                    <option value="fisica">Física</option>
-                    <option value="informatica">Informática</option>
-                </select>
+                <input type="text" id="disciplina_nota" name="disciplina_nota" placeholder="Ex: Matemática" required maxlength="100">
             </div>
 
             <div class="campo">
                 <label for="professor_nota">Professor</label>
-                <select id="professor_nota" name="professor_nota" required>
-                    <option value="">Selecione o professor</option>
-                    <option value="carlos">Carlos Mendes</option>
-                    <option value="ana">Ana Gomes</option>
-                    <option value="mario">Mário Lopes</option>
-                </select>
+                <input type="text" id="professor_nota" name="professor_nota" placeholder="Nome do professor" required maxlength="120">
             </div>
 
             <div class="campo">
@@ -66,32 +116,18 @@
 
             <div class="campo">
                 <label for="nota">Nota</label>
-                <input 
-                    type="number" 
-                    id="nota" 
-                    name="nota" 
-                    placeholder="Ex: 15"
-                    min="0"
-                    max="20"
-                    step="0.1"
-                    required>
+                <input type="number" id="nota" name="nota" placeholder="Ex: 15" min="0" max="20" step="0.1" required>
             </div>
 
             <div class="campo campo-largo">
                 <label for="observacao_nota">Observação</label>
-                <textarea 
-                    id="observacao_nota" 
-                    name="observacao_nota" 
-                    rows="4" 
-                    placeholder="Observação sobre o desempenho do aluno"></textarea>
+                <textarea id="observacao_nota" name="observacao_nota" rows="4" placeholder="Observação sobre o desempenho do aluno"></textarea>
             </div>
 
             <div class="botoes-formulario">
                 <button type="submit" class="botao">Guardar Nota</button>
                 <button type="reset" class="botao-secundario">Limpar</button>
             </div>
-
-            <p class="mensagem-formulario" id="mensagemNota"></p>
         </form>
     </section>
 
@@ -112,31 +148,28 @@
             </thead>
 
             <tbody>
-                <tr>
-                    <td>Maria Gomes</td>
-                    <td>10.º Ano A</td>
-                    <td>Matemática</td>
-                    <td>Carlos Mendes</td>
-                    <td>1.º Período</td>
-                    <td>15</td>
-                    <td>
-                        <button class="acao editar">Editar</button>
-                        <button class="acao eliminar">Eliminar</button>
-                    </td>
-                </tr>
+                <?php while ($registo = mysqli_fetch_assoc($resultado)) { ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($registo["aluno"]); ?></td>
+                        <td><?php echo htmlspecialchars($registo["turma"]); ?></td>
+                        <td><?php echo htmlspecialchars($registo["disciplina"]); ?></td>
+                        <td><?php echo htmlspecialchars($registo["professor"]); ?></td>
+                        <td><?php echo htmlspecialchars($registo["periodo"]); ?></td>
+                        <td><?php echo htmlspecialchars($registo["nota"]); ?></td>
+                        <td>
+                            <a class="acao editar" href="editar_nota.php?id=<?php echo $registo['id_nota']; ?>">
+                                Editar
+                            </a>
 
-                <tr>
-                    <td>João Embaló</td>
-                    <td>11.º Ano A</td>
-                    <td>Português</td>
-                    <td>Ana Gomes</td>
-                    <td>1.º Período</td>
-                    <td>16.5</td>
-                    <td>
-                        <button class="acao editar">Editar</button>
-                        <button class="acao eliminar">Eliminar</button>
-                    </td>
-                </tr>
+                            <a 
+                                class="acao eliminar" 
+                                href="notas.php?acao=eliminar&id=<?php echo $registo['id_nota']; ?>"
+                                onclick="return confirm('Tem a certeza que deseja eliminar esta nota?');">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                <?php } ?>
             </tbody>
         </table>
     </section>
