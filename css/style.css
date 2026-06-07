@@ -366,3 +366,50 @@ body {
     text-decoration: none;
     display: inline-block;
 }
+.acoes-relatorio {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+@media print {
+    .topo,
+    .menu,
+    .formulario-container,
+    .acoes-relatorio,
+    .rodape {
+        display: none;
+    }
+
+    body {
+        background-color: white;
+        color: black;
+    }
+
+    .conteudo {
+        padding: 0;
+    }
+
+    .cabecalho-pagina,
+    .tabela-container,
+    .card-relatorio {
+        box-shadow: none;
+        border: none;
+    }
+
+    .tabela th {
+        background-color: #ddd;
+        color: black;
+    }
+
+    .tabela,
+    .tabela th,
+    .tabela td {
+        border: 1px solid #333;
+    }
+}

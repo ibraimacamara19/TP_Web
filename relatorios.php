@@ -1,3 +1,135 @@
+<?php
+require_once 'config/conexao.php';
+
+function obter_total($conn, $sql) {
+    $resultado = mysqli_query($conn, $sql);
+    $linha = mysqli_fetch_assoc($resultado);
+    return $linha["total"];
+}
+
+$total_alunos = obter_total($conn, "SELECT COUNT(*) AS total FROM alunos");
+$total_professores = obter_total($conn, "SELECT COUNT(*) AS total FROM professores");
+$total_turmas = obter_total($conn, "SELECT COUNT(*) AS total FROM turmas WHERE estado = 'ativa'");
+$total_pagamentos_pendentes = obter_total($conn, "SELECT COUNT(*) AS total FROM pagamentos WHERE estado = 'pendente'");
+
+$resultado_valor = mysqli_query($conn, "SELECT COALESCE(SUM(valor), 0) AS total FROM pagamentos WHERE estado = 'pago'");
+$linha_valor = mysqli_fetch_assoc($resultado_valor);
+$total_recebido = $linha_valor["total"];
+
+$resultado_media = mysqli_query($conn, "SELECT COALESCE(AVG(nota), 0) AS media FROM notas");
+$linha_media = mysqli_fetch_assoc($resultado_media);
+$media_notas = $linha_media["media"];
+
+$tipo_relatorio = isset($_GET["tipo_relatorio"]) ? $_GET["tipo_relatorio"] : "resumo";
+
+$titulo_resultado = "Resumo Geral";
+$linhas = [];
+
+if ($tipo_relatorio === "alunos") {
+    $titulo_resultado = "Relatório de Alunos";
+    $resultado = mysqli_query($conn, "SELECT * FROM alunos ORDER BY nome ASC");
+
+    while ($aluno = mysqli_fetch_assoc($resultado)) {
+        $linhas[] = [
+            "categoria" => "Aluno",
+            "descricao" => $aluno["nome"] . " - " . $aluno["turma"],
+            "valor" => $aluno["numero_estudante"],
+            "estado" => "Registado"
+        ];
+    }
+} elseif ($tipo_relatorio === "professores") {
+    $titulo_resultado = "Relatório de Professores";
+    $resultado = mysqli_query($conn, "SELECT * FROM professores ORDER BY nome ASC");
+
+    while ($professor = mysqli_fetch_assoc($resultado)) {
+        $linhas[] = [
+            "categoria" => "Professor",
+            "descricao" => $professor["nome"] . " - " . $professor["especialidade"],
+            "valor" => $professor["email"],
+            "estado" => $professor["estado"]
+        ];
+    }
+} elseif ($tipo_relatorio === "turmas") {
+    $titulo_resultado = "Relatório de Turmas";
+    $resultado = mysqli_query($conn, "SELECT * FROM turmas ORDER BY nome ASC");
+
+    while ($turma = mysqli_fetch_assoc($resultado)) {
+        $linhas[] = [
+            "categoria" => "Turma",
+            "descricao" => $turma["nome"] . " - " . $turma["classe"],
+            "valor" => $turma["ano_letivo"],
+            "estado" => $turma["estado"]
+        ];
+    }
+} elseif ($tipo_relatorio === "notas") {
+    $titulo_resultado = "Relatório de Notas";
+    $resultado = mysqli_query($conn, "SELECT * FROM notas ORDER BY criado_em DESC");
+
+    while ($nota = mysqli_fetch_assoc($resultado)) {
+        $linhas[] = [
+            "categoria" => "Nota",
+            "descricao" => $nota["aluno"] . " - " . $nota["disciplina"],
+            "valor" => $nota["nota"],
+            "estado" => $nota["periodo"]
+        ];
+    }
+} elseif ($tipo_relatorio === "pagamentos") {
+    $titulo_resultado = "Relatório de Pagamentos";
+    $resultado = mysqli_query($conn, "SELECT * FROM pagamentos ORDER BY data_pagamento DESC");
+
+    while ($pagamento = mysqli_fetch_assoc($resultado)) {
+        $linhas[] = [
+            "categoria" => "Pagamento",
+            "descricao" => $pagamento["aluno"] . " - " . $pagamento["tipo_pagamento"],
+            "valor" => number_format($pagamento["valor"], 2, ",", ".") . " FCFA",
+            "estado" => $pagamento["estado"]
+        ];
+    }
+} else {
+    $linhas[] = [
+        "categoria" => "Alunos",
+        "descricao" => "Total de alunos registados",
+        "valor" => $total_alunos,
+        "estado" => "Atualizado"
+    ];
+
+    $linhas[] = [
+        "categoria" => "Professores",
+        "descricao" => "Total de professores registados",
+        "valor" => $total_professores,
+        "estado" => "Atualizado"
+    ];
+
+    $linhas[] = [
+        "categoria" => "Turmas",
+        "descricao" => "Turmas ativas",
+        "valor" => $total_turmas,
+        "estado" => "Ativo"
+    ];
+
+    $linhas[] = [
+        "categoria" => "Pagamentos",
+        "descricao" => "Pagamentos pendentes",
+        "valor" => $total_pagamentos_pendentes,
+        "estado" => "Pendente"
+    ];
+
+    $linhas[] = [
+        "categoria" => "Receitas",
+        "descricao" => "Total recebido em pagamentos pagos",
+        "valor" => number_format($total_recebido, 2, ",", ".") . " FCFA",
+        "estado" => "Pago"
+    ];
+
+    $linhas[] = [
+        "categoria" => "Notas",
+        "descricao" => "Média geral das notas",
+        "valor" => number_format($media_notas, 2, ",", "."),
+        "estado" => "Atualizado"
+    ];
+}
+?>
+
 <?php include 'includes/header.php'; ?>
 <?php include 'includes/menu.php'; ?>
 
@@ -5,90 +137,65 @@
 
     <section class="cabecalho-pagina">
         <h2>Relatórios Administrativos</h2>
-        <p>Consulte informações resumidas sobre alunos, professores, turmas, notas e pagamentos.</p>
+        <p>Consulte informações reais registadas na base de dados do sistema.</p>
     </section>
 
     <section class="resumo-relatorios">
         <article class="card-relatorio">
             <h3>Total de Alunos</h3>
-            <p class="valor-destaque">120</p>
+            <p class="valor-destaque"><?php echo $total_alunos; ?></p>
         </article>
 
         <article class="card-relatorio">
             <h3>Total de Professores</h3>
-            <p class="valor-destaque">18</p>
+            <p class="valor-destaque"><?php echo $total_professores; ?></p>
         </article>
 
         <article class="card-relatorio">
             <h3>Turmas Ativas</h3>
-            <p class="valor-destaque">12</p>
+            <p class="valor-destaque"><?php echo $total_turmas; ?></p>
         </article>
 
         <article class="card-relatorio">
             <h3>Pagamentos Pendentes</h3>
-            <p class="valor-destaque">25</p>
+            <p class="valor-destaque"><?php echo $total_pagamentos_pendentes; ?></p>
         </article>
     </section>
 
     <section class="formulario-container">
         <h3>Filtrar Relatório</h3>
 
-        <form class="formulario formulario-relatorio" method="post" action="#">
+        <form class="formulario" method="get" action="relatorios.php">
             <div class="campo">
                 <label for="tipo_relatorio">Tipo de Relatório</label>
                 <select id="tipo_relatorio" name="tipo_relatorio" required>
-                    <option value="">Selecione</option>
-                    <option value="alunos">Alunos</option>
-                    <option value="professores">Professores</option>
-                    <option value="turmas">Turmas</option>
-                    <option value="notas">Notas</option>
-                    <option value="pagamentos">Pagamentos</option>
-                </select>
-            </div>
-
-            <div class="campo">
-                <label for="ano_letivo_relatorio">Ano Letivo</label>
-                <input 
-                    type="text" 
-                    id="ano_letivo_relatorio" 
-                    name="ano_letivo_relatorio" 
-                    placeholder="Ex: 2025/2026"
-                    maxlength="20">
-            </div>
-
-            <div class="campo">
-                <label for="turma_relatorio">Turma</label>
-                <select id="turma_relatorio" name="turma_relatorio">
-                    <option value="">Todas as turmas</option>
-                    <option value="10A">10.º Ano A</option>
-                    <option value="11A">11.º Ano A</option>
-                    <option value="12A">12.º Ano A</option>
-                </select>
-            </div>
-
-            <div class="campo">
-                <label for="estado_relatorio">Estado</label>
-                <select id="estado_relatorio" name="estado_relatorio">
-                    <option value="">Todos</option>
-                    <option value="ativo">Ativo</option>
-                    <option value="inativo">Inativo</option>
-                    <option value="pago">Pago</option>
-                    <option value="pendente">Pendente</option>
-                    <option value="atrasado">Atrasado</option>
+                    <option value="resumo" <?php if ($tipo_relatorio === "resumo") echo "selected"; ?>>Resumo Geral</option>
+                    <option value="alunos" <?php if ($tipo_relatorio === "alunos") echo "selected"; ?>>Alunos</option>
+                    <option value="professores" <?php if ($tipo_relatorio === "professores") echo "selected"; ?>>Professores</option>
+                    <option value="turmas" <?php if ($tipo_relatorio === "turmas") echo "selected"; ?>>Turmas</option>
+                    <option value="notas" <?php if ($tipo_relatorio === "notas") echo "selected"; ?>>Notas</option>
+                    <option value="pagamentos" <?php if ($tipo_relatorio === "pagamentos") echo "selected"; ?>>Pagamentos</option>
                 </select>
             </div>
 
             <div class="botoes-formulario">
                 <button type="submit" class="botao">Gerar Relatório</button>
-                <button type="reset" class="botao-secundario">Limpar</button>
+                <a href="relatorios.php" class="botao-secundario">Limpar</a>
             </div>
-
-            <p class="mensagem-formulario" id="mensagemRelatorio"></p>
         </form>
     </section>
+    <section class="acoes-relatorio">
+    <button type="button" class="botao" onclick="window.print();">
+        Imprimir Relatório
+    </button>
+
+    <button type="button" class="botao-secundario" onclick="window.print();">
+        Gerar PDF
+    </button>
+</section>
 
     <section class="tabela-container">
-        <h3>Resultado do Relatório</h3>
+        <h3><?php echo $titulo_resultado; ?></h3>
 
         <table class="tabela">
             <thead>
@@ -101,33 +208,20 @@
             </thead>
 
             <tbody>
-                <tr>
-                    <td>Alunos</td>
-                    <td>Alunos registados no sistema</td>
-                    <td>120</td>
-                    <td><span class="estado ativo">Ativo</span></td>
-                </tr>
-
-                <tr>
-                    <td>Professores</td>
-                    <td>Professores registados</td>
-                    <td>18</td>
-                    <td><span class="estado ativo">Ativo</span></td>
-                </tr>
-
-                <tr>
-                    <td>Pagamentos</td>
-                    <td>Propinas pendentes</td>
-                    <td>25</td>
-                    <td><span class="estado pendente">Pendente</span></td>
-                </tr>
-
-                <tr>
-                    <td>Notas</td>
-                    <td>Média geral das notas</td>
-                    <td>14.8</td>
-                    <td><span class="estado ativo">Atualizado</span></td>
-                </tr>
+                <?php if (count($linhas) > 0) { ?>
+                    <?php foreach ($linhas as $linha) { ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($linha["categoria"]); ?></td>
+                            <td><?php echo htmlspecialchars($linha["descricao"]); ?></td>
+                            <td><?php echo htmlspecialchars($linha["valor"]); ?></td>
+                            <td><?php echo htmlspecialchars($linha["estado"]); ?></td>
+                        </tr>
+                    <?php } ?>
+                <?php } else { ?>
+                    <tr>
+                        <td colspan="4">Não existem dados para apresentar.</td>
+                    </tr>
+                <?php } ?>
             </tbody>
         </table>
     </section>
