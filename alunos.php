@@ -2,8 +2,14 @@
 require_once 'config/conexao.php';
 
 $mensagem = "";
-if (isset($_GET["msg"]) && $_GET["msg"] === "eliminado") {
-    $mensagem = "Aluno eliminado com sucesso!";
+if (isset($_GET["msg"])) {
+    if ($_GET["msg"] === "eliminado") {
+        $mensagem = "Aluno eliminado com sucesso!";
+    }
+
+    if ($_GET["msg"] === "atualizado") {
+        $mensagem = "Aluno atualizado com sucesso!";
+    }
 }
 
 if (isset($_GET["acao"]) && $_GET["acao"] === "eliminar" && isset($_GET["id"])) {
