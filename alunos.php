@@ -2,6 +2,25 @@
 require_once 'config/conexao.php';
 
 $mensagem = "";
+if (isset($_GET["msg"]) && $_GET["msg"] === "eliminado") {
+    $mensagem = "Aluno eliminado com sucesso!";
+}
+
+if (isset($_GET["acao"]) && $_GET["acao"] === "eliminar" && isset($_GET["id"])) {
+    $id_aluno = intval($_GET["id"]);
+
+    $sql_delete = "DELETE FROM alunos WHERE id_aluno = ?";
+    $stmt_delete = mysqli_prepare($conn, $sql_delete);
+
+    mysqli_stmt_bind_param($stmt_delete, "i", $id_aluno);
+
+    if (mysqli_stmt_execute($stmt_delete)) {
+        header("Location: alunos.php?msg=eliminado");
+        exit;
+    } else {
+        $mensagem = "Erro ao eliminar aluno: " . mysqli_error($conn);
+    }
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $numero_estudante = $_POST["numero_estudante"];
@@ -164,10 +183,18 @@ $resultado = mysqli_query($conn, "SELECT * FROM alunos ORDER BY id_aluno DESC");
                         <td><?php echo htmlspecialchars($aluno["turma"]); ?></td>
                         <td><?php echo htmlspecialchars($aluno["contacto"]); ?></td>
                         <td><?php echo htmlspecialchars($aluno["email"]); ?></td>
-                        <td>
-                            <button class="acao editar">Editar</button>
-                            <button class="acao eliminar">Eliminar</button>
-                        </td>
+                       <td>
+    <a class="acao editar" href="editar_aluno.php?id=<?php echo $aluno['id_aluno']; ?>">
+        Editar
+    </a>
+
+    <a 
+        class="acao eliminar" 
+        href="alunos.php?acao=eliminar&id=<?php echo $aluno['id_aluno']; ?>"
+        onclick="return confirm('Tem a certeza que deseja eliminar este aluno?');">
+        Eliminar
+    </a>
+</td>
                     </tr>
                 <?php } ?>
             </tbody>

@@ -362,3 +362,7 @@ body {
 .info-item p {
     margin-top: 5px;
 }
+.tabela a.acao {
+    text-decoration: none;
+    display: inline-block;
+}
