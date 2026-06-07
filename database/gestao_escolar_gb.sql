@@ -63,3 +63,24 @@ CREATE TABLE IF NOT EXISTS notas (
     observacao TEXT,
     criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE IF NOT EXISTS pagamentos (
+    id_pagamento INT AUTO_INCREMENT PRIMARY KEY,
+    aluno VARCHAR(120) NOT NULL,
+    tipo_pagamento ENUM('matricula', 'propina', 'exame', 'outro') NOT NULL,
+    mes_referencia VARCHAR(20),
+    valor DECIMAL(10,2) NOT NULL,
+    data_pagamento DATE NOT NULL,
+    metodo_pagamento ENUM('dinheiro', 'transferencia', 'outro') NOT NULL,
+    estado ENUM('pago', 'pendente', 'atrasado') DEFAULT 'pendente',
+    observacao TEXT,
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS mensagens_contacto (
+    id_mensagem INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(120) NOT NULL,
+    email VARCHAR(120) NOT NULL,
+    assunto VARCHAR(150) NOT NULL,
+    mensagem TEXT NOT NULL,
+    estado ENUM('nova', 'lida', 'respondida') DEFAULT 'nova',
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
+);
