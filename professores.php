@@ -1,3 +1,69 @@
+<?php
+require_once 'config/conexao.php';
+
+$mensagem = "";
+
+if (isset($_GET["msg"])) {
+    if ($_GET["msg"] === "eliminado") {
+        $mensagem = "Professor eliminado com sucesso!";
+    }
+
+    if ($_GET["msg"] === "atualizado") {
+        $mensagem = "Professor atualizado com sucesso!";
+    }
+}
+
+if (isset($_GET["acao"]) && $_GET["acao"] === "eliminar" && isset($_GET["id"])) {
+    $id_professor = intval($_GET["id"]);
+
+    $sql_delete = "DELETE FROM professores WHERE id_professor = ?";
+    $stmt_delete = mysqli_prepare($conn, $sql_delete);
+
+    mysqli_stmt_bind_param($stmt_delete, "i", $id_professor);
+
+    if (mysqli_stmt_execute($stmt_delete)) {
+        header("Location: professores.php?msg=eliminado");
+        exit;
+    } else {
+        $mensagem = "Erro ao eliminar professor: " . mysqli_error($conn);
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $nome = $_POST["nome_professor"];
+    $email = $_POST["email_professor"];
+    $contacto = $_POST["contacto_professor"];
+    $especialidade = $_POST["especialidade"];
+    $estado = $_POST["estado_professor"];
+    $observacao = $_POST["observacao_professor"];
+
+    $sql = "INSERT INTO professores 
+        (nome, email, contacto, especialidade, estado, observacao)
+        VALUES (?, ?, ?, ?, ?, ?)";
+
+    $stmt = mysqli_prepare($conn, $sql);
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "ssssss",
+        $nome,
+        $email,
+        $contacto,
+        $especialidade,
+        $estado,
+        $observacao
+    );
+
+    if (mysqli_stmt_execute($stmt)) {
+        $mensagem = "Professor registado com sucesso!";
+    } else {
+        $mensagem = "Erro ao registar professor: " . mysqli_error($conn);
+    }
+}
+
+$resultado = mysqli_query($conn, "SELECT * FROM professores ORDER BY id_professor DESC");
+?>
+
 <?php include 'includes/header.php'; ?>
 <?php include 'includes/menu.php'; ?>
 
@@ -11,7 +77,11 @@
     <section class="formulario-container">
         <h3>Registar Novo Professor</h3>
 
-        <form class="formulario formulario-professor" method="post" action="#">
+        <?php if (!empty($mensagem)) { ?>
+            <p class="mensagem-formulario"><?php echo $mensagem; ?></p>
+        <?php } ?>
+
+        <form class="formulario" method="post" action="professores.php">
             <div class="campo">
                 <label for="nome_professor">Nome Completo</label>
                 <input 
@@ -76,8 +146,6 @@
                 <button type="submit" class="botao">Guardar Professor</button>
                 <button type="reset" class="botao-secundario">Limpar</button>
             </div>
-
-            <p class="mensagem-formulario" id="mensagemProfessor"></p>
         </form>
     </section>
 
@@ -97,29 +165,27 @@
             </thead>
 
             <tbody>
-                <tr>
-                    <td>Carlos Mendes</td>
-                    <td>carlos@email.com</td>
-                    <td>+245 966 111 111</td>
-                    <td>Matemática</td>
-                    <td>Ativo</td>
-                    <td>
-                        <button class="acao editar">Editar</button>
-                        <button class="acao eliminar">Eliminar</button>
-                    </td>
-                </tr>
+                <?php while ($professor = mysqli_fetch_assoc($resultado)) { ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($professor["nome"]); ?></td>
+                        <td><?php echo htmlspecialchars($professor["email"]); ?></td>
+                        <td><?php echo htmlspecialchars($professor["contacto"]); ?></td>
+                        <td><?php echo htmlspecialchars($professor["especialidade"]); ?></td>
+                        <td><?php echo htmlspecialchars($professor["estado"]); ?></td>
+                        <td>
+                            <a class="acao editar" href="editar_professor.php?id=<?php echo $professor['id_professor']; ?>">
+                                Editar
+                            </a>
 
-                <tr>
-                    <td>Ana Gomes</td>
-                    <td>ana@email.com</td>
-                    <td>+245 955 222 222</td>
-                    <td>Português</td>
-                    <td>Ativo</td>
-                    <td>
-                        <button class="acao editar">Editar</button>
-                        <button class="acao eliminar">Eliminar</button>
-                    </td>
-                </tr>
+                            <a 
+                                class="acao eliminar" 
+                                href="professores.php?acao=eliminar&id=<?php echo $professor['id_professor']; ?>"
+                                onclick="return confirm('Tem a certeza que deseja eliminar este professor?');">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                <?php } ?>
             </tbody>
         </table>
     </section>
