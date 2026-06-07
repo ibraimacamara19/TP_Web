@@ -19,3 +19,36 @@ CREATE TABLE IF NOT EXISTS alunos (
     observacao TEXT,
     criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE IF NOT EXISTS professores (
+    id_professor INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(120) NOT NULL,
+    email VARCHAR(120) NOT NULL UNIQUE,
+    contacto VARCHAR(30),
+    especialidade VARCHAR(100) NOT NULL,
+    estado ENUM('ativo', 'inativo') DEFAULT 'ativo',
+    observacao TEXT,
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS turmas (
+    id_turma INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    nivel_ensino ENUM('basico', 'secundario', 'tecnico') NOT NULL,
+    classe VARCHAR(30) NOT NULL,
+    turno ENUM('manha', 'tarde', 'noite') NOT NULL,
+    sala VARCHAR(30),
+    ano_letivo VARCHAR(20) NOT NULL,
+    estado ENUM('ativa', 'inativa') DEFAULT 'ativa',
+    observacao TEXT,
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS disciplinas (
+    id_disciplina INT AUTO_INCREMENT PRIMARY KEY,
+    codigo VARCHAR(20) NOT NULL UNIQUE,
+    nome VARCHAR(100) NOT NULL,
+    carga_horaria INT NOT NULL,
+    nivel_ensino ENUM('basico', 'secundario', 'tecnico') NOT NULL,
+    professor_responsavel VARCHAR(120),
+    estado ENUM('ativa', 'inativa') DEFAULT 'ativa',
+    descricao TEXT,
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
+);
