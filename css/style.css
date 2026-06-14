@@ -413,3 +413,75 @@ body {
         border: 1px solid #333;
     }
 }
+/* Cabeçalho oficial dos relatórios e notas */
+.cabecalho-documento {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    text-align: left;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #003366;
+}
+
+.brasao-documento {
+    width: 80px !important;
+    max-width: 80px !important;
+    height: auto !important;
+    object-fit: contain;
+    display: block;
+}
+
+.cabecalho-documento h2 {
+    color: #003366;
+    font-size: 22px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.cabecalho-documento p {
+    color: #333;
+    margin: 3px 0;
+    font-weight: bold;
+}
+
+/* Ajuste especial para impressão/PDF */
+@media print {
+    .cabecalho-documento {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 15px !important;
+        text-align: left !important;
+        border-bottom: 2px solid #000;
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+        page-break-inside: avoid;
+    }
+
+    .brasao-documento {
+        width: 65px !important;
+        max-width: 65px !important;
+        height: auto !important;
+        object-fit: contain !important;
+    }
+
+    .cabecalho-documento h2 {
+        color: #000;
+        font-size: 18px;
+        margin: 0 0 4px 0;
+    }
+
+    .cabecalho-documento p {
+        color: #000;
+        font-size: 12px;
+        margin: 2px 0;
+    }
+
+    .relatorio-area {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+}
