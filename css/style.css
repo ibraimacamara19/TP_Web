@@ -513,3 +513,37 @@ body {
         margin-bottom: 4px;
     }
 }
+.seletor-idioma {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(255,255,255,0.12);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.seletor-idioma span {
+    font-weight: bold;
+}
+
+.seletor-idioma a {
+    color: white;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.5);
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.seletor-idioma a:hover,
+.seletor-idioma .idioma-ativo {
+    background-color: white;
+    color: #003366;
+}
+
+@media print {
+    .seletor-idioma {
+        display: none !important;
+    }
+}
