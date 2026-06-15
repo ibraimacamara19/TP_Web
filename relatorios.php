@@ -33,6 +33,7 @@ function formatar_estado($estado) {
         "inativa" => "Inativa",
         "inativo" => "Inativo",
         "pago" => "Pago",
+        "parcial" => "Parcial",
         "pendente" => "Pendente",
         "atrasado" => "Atrasado",
         "Registado" => "Registado",
@@ -125,7 +126,7 @@ if ($tipo_relatorio === "alunos") {
         $linhas[] = [
             "categoria" => "Pagamento",
             "descricao" => $pagamento["aluno"] . " | Tipo: " . $pagamento["tipo_pagamento"] . " | Mês: " . $pagamento["mes_referencia"],
-            "valor" => number_format($pagamento["valor"], 2, ",", ".") . " FCFA",
+            "valor" => number_format($pagamento["valor"], 2, ",", ".") . " XOF",
             "estado" => formatar_estado($pagamento["estado"])
         ];
     }
@@ -161,7 +162,7 @@ if ($tipo_relatorio === "alunos") {
     $linhas[] = [
         "categoria" => "Receitas",
         "descricao" => "Total recebido em pagamentos pagos",
-        "valor" => number_format($total_recebido, 2, ",", ".") . " FCFA",
+        "valor" => number_format($total_recebido, 2, ",", ".") . " XOF",
         "estado" => "Pago"
     ];
 
@@ -176,6 +177,183 @@ if ($tipo_relatorio === "alunos") {
 
 <?php include 'includes/header.php'; ?>
 <?php include 'includes/menu.php'; ?>
+
+<style>
+    .relatorio-area {
+        background-color: #ffffff !important;
+        color: #111111 !important;
+        padding: 25px !important;
+        border-top: 6px solid #CE1126 !important;
+    }
+
+    .relatorio-area * {
+        color: inherit;
+    }
+
+    .relatorio-area .relatorio-topo h3 {
+        color: #003366 !important;
+    }
+
+    .relatorio-area .relatorio-topo p,
+    .relatorio-area .relatorio-meta p {
+        color: #111111 !important;
+    }
+
+    .relatorio-area .tabela {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        background-color: #ffffff !important;
+        color: #111111 !important;
+    }
+
+    .relatorio-area .tabela th {
+        background-color: #003366 !important;
+        color: #ffffff !important;
+        border: 1px solid #003366 !important;
+        padding: 12px !important;
+        text-align: left !important;
+    }
+
+    .relatorio-area .tabela td {
+        background-color: #ffffff !important;
+        color: #111111 !important;
+        border: 1px solid #dddddd !important;
+        padding: 12px !important;
+        opacity: 1 !important;
+        font-weight: normal !important;
+    }
+
+    .relatorio-area .tabela tbody tr:nth-child(even) td {
+        background-color: #f4f7fb !important;
+        color: #111111 !important;
+    }
+
+    .relatorio-area .tabela tbody tr:nth-child(odd) td {
+        background-color: #ffffff !important;
+        color: #111111 !important;
+    }
+
+    .relatorio-area .tabela tbody tr:hover td {
+        background-color: #fff8d6 !important;
+        color: #111111 !important;
+    }
+
+    @media print {
+        body {
+            background: white !important;
+            color: black !important;
+        }
+
+        .topo,
+        .menu,
+        .cabecalho-pagina,
+        .resumo-relatorios,
+        .formulario-container,
+        .acoes-relatorio,
+        .rodape,
+        .no-print {
+            display: none !important;
+        }
+
+        .conteudo {
+            display: block !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+        }
+
+        .relatorio-area {
+            display: block !important;
+            visibility: visible !important;
+            background: white !important;
+            color: black !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        .cabecalho-documento {
+            display: flex !important;
+            visibility: visible !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 15px !important;
+            text-align: left !important;
+            border-bottom: 2px solid black !important;
+            margin-bottom: 15px !important;
+            padding-bottom: 10px !important;
+        }
+
+        .brasao-documento {
+            display: block !important;
+            visibility: visible !important;
+            width: 65px !important;
+            max-width: 65px !important;
+            height: auto !important;
+        }
+
+        .cabecalho-documento h2,
+        .cabecalho-documento p,
+        .relatorio-topo h3,
+        .relatorio-topo p,
+        .relatorio-meta p {
+            color: black !important;
+            visibility: visible !important;
+        }
+
+        .relatorio-topo {
+            display: flex !important;
+            justify-content: space-between !important;
+            gap: 20px !important;
+            border-bottom: 1px solid #999 !important;
+            margin-bottom: 15px !important;
+            padding-bottom: 10px !important;
+            visibility: visible !important;
+        }
+
+        .relatorio-meta {
+            display: block !important;
+            visibility: visible !important;
+            background: white !important;
+            color: black !important;
+            border: 1px solid #999 !important;
+            padding: 8px !important;
+        }
+
+        .relatorio-area .tabela {
+            display: table !important;
+            visibility: visible !important;
+            width: 100% !important;
+            border-collapse: collapse !important;
+            font-size: 11px !important;
+            color: black !important;
+            background: white !important;
+        }
+
+        .relatorio-area .tabela th {
+            background: black !important;
+            color: white !important;
+            border: 1px solid black !important;
+            padding: 7px !important;
+        }
+
+        .relatorio-area .tabela td {
+            background: white !important;
+            color: black !important;
+            border: 1px solid black !important;
+            padding: 7px !important;
+            opacity: 1 !important;
+        }
+
+        .relatorio-area .tabela tbody tr:nth-child(even) td,
+        .relatorio-area .tabela tbody tr:nth-child(odd) td {
+            background: white !important;
+            color: black !important;
+        }
+    }
+</style>
 
 <main class="conteudo">
 
@@ -230,14 +408,14 @@ if ($tipo_relatorio === "alunos") {
     </section>
 
     <section class="acoes-relatorio no-print">
-        <button type="button" class="botao" onclick="window.print();">
-            Imprimir Relatório
-        </button>
+    <button type="button" class="botao" onclick="imprimirRelatorio();">
+        Imprimir Relatório
+    </button>
 
-        <button type="button" class="botao-secundario" onclick="window.print();">
-            Gerar PDF
-        </button>
-    </section>
+    <button type="button" class="botao-secundario" onclick="imprimirRelatorio();">
+        Gerar PDF
+    </button>
+</section>
 
     <section class="tabela-container relatorio-area">
 
@@ -270,15 +448,28 @@ if ($tipo_relatorio === "alunos") {
                 <?php if (count($linhas) > 0) { ?>
                     <?php foreach ($linhas as $linha) { ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($linha["categoria"]); ?></td>
-                            <td><?php echo htmlspecialchars($linha["descricao"]); ?></td>
-                            <td><?php echo htmlspecialchars($linha["valor"]); ?></td>
-                            <td><?php echo htmlspecialchars($linha["estado"]); ?></td>
+                            <td style="color: #111111 !important; background-color: #ffffff !important;">
+                                <?php echo htmlspecialchars($linha["categoria"]); ?>
+                            </td>
+
+                            <td style="color: #111111 !important; background-color: #ffffff !important;">
+                                <?php echo htmlspecialchars($linha["descricao"]); ?>
+                            </td>
+
+                            <td style="color: #111111 !important; background-color: #ffffff !important;">
+                                <?php echo htmlspecialchars($linha["valor"]); ?>
+                            </td>
+
+                            <td style="color: #111111 !important; background-color: #ffffff !important;">
+                                <?php echo htmlspecialchars($linha["estado"]); ?>
+                            </td>
                         </tr>
                     <?php } ?>
                 <?php } else { ?>
                     <tr>
-                        <td colspan="4">Não existem dados para apresentar.</td>
+                        <td colspan="4" style="color: #111111 !important; background-color: #ffffff !important;">
+                            Não existem dados para apresentar.
+                        </td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -287,5 +478,151 @@ if ($tipo_relatorio === "alunos") {
     </section>
 
 </main>
+<script>
+function imprimirRelatorio() {
+    const areaRelatorio = document.querySelector(".relatorio-area");
 
+    if (!areaRelatorio) {
+        alert("Área do relatório não encontrada.");
+        return;
+    }
+
+    const conteudo = areaRelatorio.innerHTML;
+
+    const janela = window.open("", "_blank", "width=1000,height=800");
+
+    janela.document.write(`
+        <!DOCTYPE html>
+        <html lang="pt">
+        <head>
+            <meta charset="UTF-8">
+            <title>Relatório - Sistema de Gestão Escolar GB</title>
+
+            <style>
+                @page {
+                    size: A4;
+                    margin: 15mm;
+                }
+
+                * {
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: Arial, Helvetica, sans-serif;
+                    background: white;
+                    color: black;
+                    margin: 0;
+                    padding: 0;
+                    font-size: 12px;
+                }
+
+                .cabecalho-documento {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 15px;
+                    text-align: left;
+                    border-bottom: 2px solid black;
+                    margin-bottom: 18px;
+                    padding-bottom: 12px;
+                }
+
+                .brasao-documento {
+                    width: 65px;
+                    max-width: 65px;
+                    height: auto;
+                }
+
+                .cabecalho-documento h2 {
+                    font-size: 18px;
+                    margin: 0 0 4px 0;
+                    color: black;
+                    text-transform: uppercase;
+                }
+
+                .cabecalho-documento p {
+                    margin: 2px 0;
+                    color: black;
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+
+                .relatorio-topo {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 20px;
+                    border-bottom: 1px solid #999;
+                    margin-bottom: 18px;
+                    padding-bottom: 10px;
+                }
+
+                .relatorio-topo h3 {
+                    font-size: 18px;
+                    color: black;
+                    margin-bottom: 5px;
+                }
+
+                .relatorio-topo p,
+                .relatorio-meta p {
+                    color: black;
+                    font-size: 12px;
+                    margin: 3px 0;
+                }
+
+                .relatorio-meta {
+                    border: 1px solid #999;
+                    padding: 8px;
+                    min-width: 220px;
+                }
+
+                .tabela {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 11px;
+                    margin-top: 10px;
+                }
+
+                .tabela th {
+                    background: black;
+                    color: white;
+                    border: 1px solid black;
+                    padding: 8px;
+                    text-align: left;
+                }
+
+                .tabela td {
+                    background: white;
+                    color: black;
+                    border: 1px solid black;
+                    padding: 8px;
+                    text-align: left;
+                }
+
+                .tabela tr {
+                    page-break-inside: avoid;
+                }
+
+                .acao,
+                .editar,
+                .eliminar {
+                    display: none;
+                }
+            </style>
+        </head>
+
+        <body>
+            ${conteudo}
+        </body>
+        </html>
+    `);
+
+    janela.document.close();
+
+    setTimeout(function () {
+        janela.focus();
+        janela.print();
+    }, 500);
+}
+</script>
 <?php include 'includes/footer.php'; ?>

@@ -82,18 +82,18 @@ if (!empty($aluno_selecionado)) {
     <?php if (!empty($aluno_selecionado)) { ?>
 
         <section class="acoes-relatorio no-print">
-            <button type="button" class="botao" onclick="window.print();">
-                Imprimir Relatório
-            </button>
+    <button type="button" class="botao" onclick="imprimirRelatorioIndividual();">
+        Imprimir Relatório
+    </button>
 
-            <button type="button" class="botao-secundario" onclick="window.print();">
-                Gerar PDF
-            </button>
+    <button type="button" class="botao-secundario" onclick="imprimirRelatorioIndividual();">
+        Gerar PDF
+    </button>
 
-            <a href="notas.php" class="botao-secundario">
-                Voltar para Notas
-            </a>
-        </section>
+    <a href="notas.php" class="botao-secundario">
+        Voltar para Notas
+    </a>
+</section>
 
         <section class="tabela-container relatorio-area">
 
@@ -157,5 +157,158 @@ if (!empty($aluno_selecionado)) {
     <?php } ?>
 
 </main>
+<script>
+function imprimirRelatorioIndividual() {
+    const areaRelatorio = document.querySelector(".relatorio-area");
 
+    if (!areaRelatorio) {
+        alert("Área do relatório individual não encontrada.");
+        return;
+    }
+
+    const conteudo = areaRelatorio.innerHTML;
+
+    const janela = window.open("", "_blank", "width=1000,height=800");
+
+    janela.document.write(`
+        <!DOCTYPE html>
+        <html lang="pt">
+        <head>
+            <meta charset="UTF-8">
+            <title>Relatório Individual de Notas - Sistema de Gestão Escolar GB</title>
+
+            <style>
+                @page {
+                    size: A4;
+                    margin: 15mm;
+                }
+
+                * {
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: Arial, Helvetica, sans-serif;
+                    background: white;
+                    color: black;
+                    margin: 0;
+                    padding: 0;
+                    font-size: 12px;
+                }
+
+                .cabecalho-documento {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 15px;
+                    text-align: left;
+                    border-bottom: 2px solid black;
+                    margin-bottom: 18px;
+                    padding-bottom: 12px;
+                }
+
+                .brasao-documento {
+                    width: 65px;
+                    max-width: 65px;
+                    height: auto;
+                }
+
+                .cabecalho-documento h2 {
+                    font-size: 18px;
+                    margin: 0 0 4px 0;
+                    color: black;
+                    text-transform: uppercase;
+                }
+
+                .cabecalho-documento p {
+                    margin: 2px 0;
+                    color: black;
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+
+                .relatorio-topo {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 20px;
+                    border-bottom: 1px solid #999;
+                    margin-bottom: 18px;
+                    padding-bottom: 10px;
+                }
+
+                .relatorio-topo h3 {
+                    font-size: 18px;
+                    color: black;
+                    margin-bottom: 5px;
+                }
+
+                .relatorio-topo p,
+                .relatorio-meta p {
+                    color: black;
+                    font-size: 12px;
+                    margin: 3px 0;
+                }
+
+                .relatorio-meta {
+                    border: 1px solid #999;
+                    padding: 8px;
+                    min-width: 220px;
+                }
+
+                .dados-aluno-relatorio {
+                    border: 1px solid #999;
+                    padding: 10px;
+                    margin-bottom: 15px;
+                    background: white;
+                }
+
+                .dados-aluno-relatorio p {
+                    margin: 4px 0;
+                    color: black;
+                    font-size: 12px;
+                }
+
+                .tabela {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 11px;
+                    margin-top: 10px;
+                }
+
+                .tabela th {
+                    background: black;
+                    color: white;
+                    border: 1px solid black;
+                    padding: 8px;
+                    text-align: left;
+                }
+
+                .tabela td {
+                    background: white;
+                    color: black;
+                    border: 1px solid black;
+                    padding: 8px;
+                    text-align: left;
+                }
+
+                .tabela tr {
+                    page-break-inside: avoid;
+                }
+            </style>
+        </head>
+
+        <body>
+            ${conteudo}
+        </body>
+        </html>
+    `);
+
+    janela.document.close();
+
+    setTimeout(function () {
+        janela.focus();
+        janela.print();
+    }, 500);
+}
+</script>
 <?php include 'includes/footer.php'; ?>
