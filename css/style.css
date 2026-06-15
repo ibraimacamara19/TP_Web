@@ -485,3 +485,31 @@ body {
         padding-top: 0 !important;
     }
 }
+.dados-aluno-relatorio {
+    background-color: #f4f7fb;
+    border-left: 5px solid #003366;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.dados-aluno-relatorio p {
+    margin-bottom: 6px;
+    color: #222;
+}
+
+@media print {
+    .dados-aluno-relatorio {
+        background-color: white !important;
+        border: 1px solid #333;
+        border-left: 4px solid #000;
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+
+    .dados-aluno-relatorio p {
+        color: black;
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+}

@@ -74,7 +74,11 @@ $resultado = mysqli_query($conn, "SELECT * FROM notas ORDER BY id_nota DESC");
         <h2>Gestão de Notas</h2>
         <p>Lance, consulte e organize as notas dos alunos por turma, disciplina e período.</p>
     </section>
-
+<section class="acoes-relatorio no-print">
+    <a href="relatorio_notas_aluno.php" class="botao">
+        Gerar Relatório Individual de Notas
+    </a>
+</section>
     <section class="formulario-container">
         <h3>Lançar Nova Nota</h3>
 
