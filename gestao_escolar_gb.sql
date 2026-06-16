@@ -134,10 +134,11 @@ CREATE TABLE IF NOT EXISTS `professores` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- A despejar dados para tabela gestao_escolar_gb.professores: ~2 rows (aproximadamente)
+-- A despejar dados para tabela gestao_escolar_gb.professores: ~3 rows (aproximadamente)
 INSERT INTO `professores` (`id_professor`, `nome`, `email`, `contacto`, `especialidade`, `estado`, `observacao`, `criado_em`) VALUES
 	(1, 'Mussa Camara', 'MC@gmail.com', '9555352012', 'Matematica, Fisica', 'ativo', '', '2026-06-07 07:15:16'),
-	(3, 'Ibraima Camara', 'ibojuniorcamara1@gmail.com', '955403228', 'informatica', 'inativo', '', '2026-06-07 07:17:48');
+	(3, 'Ibraima Camara', 'ibojuniorcamara1@gmail.com', '955403228', 'informatica', 'inativo', '', '2026-06-07 07:17:48'),
+	(4, 'junior', 'adfffs@mail', '15555', 'frr', 'inativo', 'wwwwwwwwww', '2026-06-17 00:18:41');
 
 -- A despejar estrutura para tabela gestao_escolar_gb.turmas
 CREATE TABLE IF NOT EXISTS `turmas` (
@@ -154,10 +155,11 @@ CREATE TABLE IF NOT EXISTS `turmas` (
   PRIMARY KEY (`id_turma`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- A despejar dados para tabela gestao_escolar_gb.turmas: ~2 rows (aproximadamente)
+-- A despejar dados para tabela gestao_escolar_gb.turmas: ~3 rows (aproximadamente)
 INSERT INTO `turmas` (`id_turma`, `nome`, `nivel_ensino`, `classe`, `turno`, `sala`, `ano_letivo`, `estado`, `observacao`, `criado_em`) VALUES
 	(1, '11º A', 'secundario', '11.º Ano', 'manha', '1', '2025/2026', 'ativa', '', '2026-06-07 07:28:48'),
-	(2, '10º H5', 'tecnico', '10.º Ano', 'noite', '12', '2025/2026', 'inativa', '', '2026-06-07 07:30:23');
+	(2, '10º H5', 'tecnico', '10.º Ano', 'noite', '12', '2025/2026', 'inativa', '', '2026-06-07 07:30:23'),
+	(3, '8º b', 'basico', '8.º Ano', 'manha', '1', '200254', 'inativa', '', '2026-06-17 00:20:07');
 
 -- A despejar estrutura para tabela gestao_escolar_gb.utilizadores
 CREATE TABLE IF NOT EXISTS `utilizadores` (
