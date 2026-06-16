@@ -1,6 +1,6 @@
 <?php
 require_once 'config/conexao.php';
-
+require_once 'config/conexao.php';
 date_default_timezone_set("Africa/Bissau");
 $data_relatorio = date("d/m/Y H:i");
 

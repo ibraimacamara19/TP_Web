@@ -1,6 +1,6 @@
 <?php
 require_once 'config/conexao.php';
-
+require_once 'config/conexao.php';
 $mensagem = "";
 if (isset($_GET["msg"])) {
     if ($_GET["msg"] === "eliminado") {

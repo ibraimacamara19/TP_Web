@@ -11,4 +11,5 @@
     <a href="pagamentos.php"><?php echo t("menu_pagamentos"); ?></a>
     <a href="relatorios.php"><?php echo t("menu_relatorios"); ?></a>
     <a href="contacto.php"><?php echo t("menu_contacto"); ?></a>
+    <a href="logout.php">Sair</a>
 </nav>

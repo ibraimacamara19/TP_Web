@@ -1,5 +1,10 @@
-<?php include 'includes/header.php'; ?>
-<?php include 'includes/menu.php'; ?>
+<?php
+require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/config/conexao.php';
+
+include __DIR__ . '/includes/header.php';
+include __DIR__ . '/includes/menu.php';
+?>
 
 <main class="conteudo">
 

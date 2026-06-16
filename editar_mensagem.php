@@ -1,6 +1,6 @@
 <?php
 require_once 'config/conexao.php';
-
+require_once 'config/conexao.php';
 if (!isset($_GET["id"])) {
     header("Location: contacto.php");
     exit;
