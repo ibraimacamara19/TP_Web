@@ -159,6 +159,23 @@ INSERT INTO `turmas` (`id_turma`, `nome`, `nivel_ensino`, `classe`, `turno`, `sa
 	(1, '11º A', 'secundario', '11.º Ano', 'manha', '1', '2025/2026', 'ativa', '', '2026-06-07 07:28:48'),
 	(2, '10º H5', 'tecnico', '10.º Ano', 'noite', '12', '2025/2026', 'inativa', '', '2026-06-07 07:30:23');
 
+-- A despejar estrutura para tabela gestao_escolar_gb.utilizadores
+CREATE TABLE IF NOT EXISTS `utilizadores` (
+  `id_utilizador` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(120) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(120) COLLATE utf8mb4_general_ci NOT NULL,
+  `palavra_passe` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `perfil` enum('admin','secretaria','professor') COLLATE utf8mb4_general_ci DEFAULT 'admin',
+  `estado` enum('ativo','inativo') COLLATE utf8mb4_general_ci DEFAULT 'ativo',
+  `criado_em` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_utilizador`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- A despejar dados para tabela gestao_escolar_gb.utilizadores: ~1 rows (aproximadamente)
+INSERT INTO `utilizadores` (`id_utilizador`, `nome`, `email`, `palavra_passe`, `perfil`, `estado`, `criado_em`) VALUES
+	(1, 'Administrador', 'admin@escola.gb', '$2y$10$5.GFItGbeWQVFDCk8sUJU.h/54T6iy6XzIyNFRr/olwK1e8vyso5y', 'admin', 'ativo', '2026-06-16 23:26:58');
+
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
